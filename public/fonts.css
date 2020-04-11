@@ -1,0 +1,41 @@
+@font-face {
+  font-family: roboto;
+  font-weight: normal;
+  src: url(src/assets/fonts/Roboto-Regular.ttf);
+}
+
+@font-face {
+  font-family: roboto;
+  font-weight: bold;
+  src: url(src/assets/fonts/Roboto-Bold.ttf);
+}
+
+@font-face {
+  font-family: google-sans;
+  font-weight: normal;
+  src: url(src/assets/fonts/GoogleSans-Regular.ttf);
+}
+
+@font-face {
+  font-family: google-sans;
+  font-weight: 500;
+  src: url(src/assets/fonts/GoogleSans-Medium.ttf);
+}
+
+@font-face {
+  font-family: gilroy;
+  font-weight: bold;
+  src: url(src/assets/fonts/Gilroy-ExtraBold.otf);
+}
+
+@font-face {
+  font-family: gilroy;
+  font-weight: normal;
+  src: url(src/assets/fonts/Gilroy-Light.otf);
+}
+
+@font-face {
+  font-family: roboto-condensed;
+  font-weight: normal;
+  src: url(src/assets/fonts/RobotoCondensed-Regular.ttf);
+}

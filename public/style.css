@@ -1,0 +1,33 @@
+@import "src/assets/fonts.css";
+@import "src/assets/vuetify-overloads.css";
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-clip: padding-box;
+  border: 4px solid rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.1);
+  -webkit-border-radius: 20px;
+  -webkit-box-shadow: inset -1px -1px 0 rgba(0, 0, 0, 0.05), inset 1px 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-corner {
+  background: #424242;
+}
