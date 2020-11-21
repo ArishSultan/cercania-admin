@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import SignInView from '@/views/SignInView'
 import HomeView from '@/views/HomeView'
 import ShopOrdersView from '@/views/shop/ShopOrdersView'
+import ShopProductsView from '@/views/shop/ShopProductsView'
+import ShopProductFormView from '@/views/shop/ShopProductFormView'
 
 Vue.use(VueRouter)
 
@@ -19,24 +21,25 @@ const routes = [
     props: {
       isAdmin: false
     },
+
     children: [
       {
         path: '/shop/orders',
         component: ShopOrdersView
       },
       {
-        path: '/shop/products'
-        // component: ''
-      },
-      {
-        path: '/shop/products/new'
-        // component: ''
+        path: '/shop/products',
+        component: ShopProductsView
       },
       {
         path: '/shop/products/edit'
         // component: ''
       }
     ]
+  },
+  {
+    path: '/shop/products/new',
+    component: ShopProductFormView
   }
 ]
 

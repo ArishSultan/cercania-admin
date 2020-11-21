@@ -1,8 +1,22 @@
 <template>
   <v-card>
     <div class="header-row">
-      <h2>Orders</h2>
+      <h2>Products</h2>
       <v-spacer />
+
+      <v-btn
+        color="primary"
+        elevation="0"
+        @click="
+          $router.push({
+            path: '/shop/products/new',
+            props: { product: new Product({ name: 'AREARAS' }) }
+          })
+        "
+        style="border-radius: 8px; margin-right: 10px"
+      >
+        Add New
+      </v-btn>
 
       <v-btn icon @click="loadData">
         <v-icon>mdi-reload</v-icon>
@@ -32,7 +46,17 @@
       :loading="loading"
       :items="data"
       :search="search"
-    />
+    >
+      <template v-slot:item.images="{ item }">
+        <img
+          :src="item.images[0].url"
+          alt=""
+          width="50"
+          height="50"
+          style="border-radius: 100px"
+        />
+      </template>
+    </v-data-table>
   </v-card>
 </template>
 
@@ -40,34 +64,36 @@
 import { firestore } from '@/firebase'
 
 export default {
-  name: 'ShopOrdersView',
+  name: 'ShopProductsView',
   data: () => ({
     search: '',
     columns: [
       {
-        width: 100,
-        text: 'Address',
-        value: 'address'
-      },
-      {
-        width: 150,
-        text: 'Business Name',
-        value: 'business-name'
-      },
-      {
-        width: 120,
-        text: 'Commission',
-        value: 'commission'
+        width: 90,
+        filterable: false,
+        sortable: false,
+        text: 'Images',
+        value: 'images'
       },
       {
         width: 100,
-        text: 'Product',
+        text: 'Name',
         value: 'name'
       },
       {
+        width: 130,
+        text: 'Product Type',
+        value: 'product-type'
+      },
+      {
+        width: 120,
+        text: 'Category',
+        value: 'category'
+      },
+      {
         width: 100,
-        text: 'Phone #',
-        value: 'phone'
+        text: 'Disabled',
+        value: 'disabled'
       },
       {
         width: 100,
@@ -75,24 +101,14 @@ export default {
         value: 'price'
       },
       {
-        width: 100,
-        text: 'Quantity',
-        value: 'quantity'
-      },
-      {
-        width: 100,
-        text: 'Status',
-        value: 'status'
-      },
-      {
-        width: 100,
-        text: 'Time',
-        value: 'time'
-      },
-      {
         width: 120,
-        text: 'Customer',
-        value: 'username'
+        text: 'Discount (%)',
+        value: 'discount'
+      },
+      {
+        width: 200,
+        text: 'Detail',
+        value: 'detail'
       }
     ],
 
@@ -112,7 +128,7 @@ export default {
     async loadData() {
       this.loading = true
       const data = await firestore
-        .collection('orders')
+        .collection('products')
         .where('shopId', '==', this.shopId)
         .get()
       this.loading = false
@@ -133,6 +149,5 @@ export default {
   display: flex
   flex-direction: row
   padding: 0 15px 15px 15px
-  //padding-bottom: 10px
   border-bottom: 1px solid rgba(black, .15)
 </style>

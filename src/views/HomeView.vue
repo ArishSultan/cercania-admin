@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar app dense color="primary">
+    <v-app-bar app dense color="primary" elevate-on-scroll>
       <v-app-bar-nav-icon @click="drawer = !drawer" color="white" />
       <v-toolbar-title style="color: white">Shop</v-toolbar-title>
     </v-app-bar>
@@ -31,6 +31,11 @@ const shopRoutes = [
     path: '/shop/orders',
     icon: 'mdi-plus',
     text: 'Orders'
+  },
+  {
+    path: '/shop/products',
+    icon: 'mdi-plus',
+    text: 'Products'
   }
 ]
 
