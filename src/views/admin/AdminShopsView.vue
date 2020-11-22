@@ -1,13 +1,13 @@
 <template>
   <v-card>
     <div class="header-row">
-      <h2>Products</h2>
+      <h2>Shops</h2>
       <v-spacer />
 
       <v-btn
         color="primary"
         elevation="0"
-        @click="$router.push({ path: '/shop/products/new' })"
+        @click="$router.push({ path: '/admin/shops/new' })"
         style="border-radius: 8px; margin-right: 10px"
       >
         Add New
@@ -42,10 +42,10 @@
       :items="data"
       :search="search"
     >
-      <template v-slot:item.images="{ item }">
+      <template v-slot:item.image="{ item }">
         <img
-          v-if="item.images.length > 0"
-          :src="item.images[0].url"
+          v-if="item.image"
+          :src="item.image.url"
           alt=""
           width="50"
           height="50"
@@ -60,6 +60,10 @@
           >mdi-delete</v-icon
         >
       </template>
+
+      <template v-slot:item.disabled="{ item }">
+        <v-checkbox v-model="item.disabled" @change="disableShop(item)" />
+      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -68,7 +72,8 @@
 import { firestore } from '@/firebase'
 
 export default {
-  name: 'ShopProductsView',
+  name: 'AdminShopsView',
+
   data: () => ({
     search: '',
     columns: [
@@ -76,43 +81,53 @@ export default {
         width: 90,
         filterable: false,
         sortable: false,
-        text: 'Images',
-        value: 'images'
+        text: 'Image',
+        value: 'image'
       },
       {
-        width: 100,
+        width: 200,
         text: 'Name',
         value: 'name'
       },
       {
-        width: 130,
-        text: 'Product Type',
-        value: 'product-type'
+        width: 250,
+        text: 'Tag Line',
+        value: 'tag-line'
       },
       {
         width: 120,
-        text: 'Category',
-        value: 'category'
+        text: 'Username',
+        value: 'username'
+      },
+      {
+        width: 120,
+        text: 'Email',
+        value: 'email'
+      },
+      {
+        width: 100,
+        text: 'Is For Handicapped',
+        value: 'is-for-handicapped'
+      },
+      {
+        width: 140,
+        text: 'Commission',
+        value: 'commission'
+      },
+      {
+        width: 250,
+        text: 'Address',
+        value: 'address'
+      },
+      {
+        width: 120,
+        text: 'Contact',
+        value: 'contact'
       },
       {
         width: 100,
         text: 'Disabled',
         value: 'disabled'
-      },
-      {
-        width: 100,
-        text: 'Price',
-        value: 'price'
-      },
-      {
-        width: 120,
-        text: 'Discount (%)',
-        value: 'discount'
-      },
-      {
-        width: 200,
-        text: 'Detail',
-        value: 'detail'
       },
       {
         width: 100,
@@ -144,7 +159,7 @@ export default {
     async deleteProd(item) {
       if (confirm('Are you sure?')) {
         await firestore
-          .collection('products')
+          .collection('shops')
           .doc(item.id)
           .delete()
 
@@ -152,12 +167,16 @@ export default {
       }
     },
 
+    disableShop(item) {
+      firestore
+        .collection('shops')
+        .doc(item.id)
+        .set(item)
+    },
+
     async loadData() {
       this.loading = true
-      const data = await firestore
-        .collection('products')
-        .where('shopId', '==', this.shopId)
-        .get()
+      const data = await firestore.collection('shops').get()
       this.loading = false
 
       this.data = data.docs.map(doc => ({ id: doc.id, ...doc.data() }))

@@ -1,17 +1,17 @@
 <template>
   <v-card>
     <div class="header-row">
-      <h2>Products</h2>
+      <h2>Users</h2>
       <v-spacer />
 
-      <v-btn
-        color="primary"
-        elevation="0"
-        @click="$router.push({ path: '/shop/products/new' })"
-        style="border-radius: 8px; margin-right: 10px"
-      >
-        Add New
-      </v-btn>
+      <!--      <v-btn-->
+      <!--        color="primary"-->
+      <!--        elevation="0"-->
+      <!--        @click="$router.push({ path: '/shop/products/new' })"-->
+      <!--        style="border-radius: 8px; margin-right: 10px"-->
+      <!--      >-->
+      <!--        Add New-->
+      <!--      </v-btn>-->
 
       <v-btn icon @click="loadData">
         <v-icon>mdi-reload</v-icon>
@@ -42,16 +42,21 @@
       :items="data"
       :search="search"
     >
-      <template v-slot:item.images="{ item }">
+      <template v-slot:item.imageUrl="{ item }">
         <img
-          v-if="item.images.length > 0"
-          :src="item.images[0].url"
+          :src="item.imageUrl"
           alt=""
           width="50"
           height="50"
           style="border-radius: 100px"
         />
-        <p v-else style="color: grey">None</p>
+      </template>
+
+      <template v-slot:item.platform="{ item }">
+        <v-icon v-if="item.platform === 'android'" color="green"
+          >mdi-android</v-icon
+        >
+        <v-icon v-else>mdi-apple-ios</v-icon>
       </template>
 
       <template v-slot:item.actions="{ item }">
@@ -76,8 +81,8 @@ export default {
         width: 90,
         filterable: false,
         sortable: false,
-        text: 'Images',
-        value: 'images'
+        text: 'Image',
+        value: 'imageUrl'
       },
       {
         width: 100,
@@ -86,33 +91,14 @@ export default {
       },
       {
         width: 130,
-        text: 'Product Type',
-        value: 'product-type'
+        sortable: false,
+        text: 'Device Platform',
+        value: 'platform'
       },
       {
         width: 120,
-        text: 'Category',
-        value: 'category'
-      },
-      {
-        width: 100,
-        text: 'Disabled',
-        value: 'disabled'
-      },
-      {
-        width: 100,
-        text: 'Price',
-        value: 'price'
-      },
-      {
-        width: 120,
-        text: 'Discount (%)',
-        value: 'discount'
-      },
-      {
-        width: 200,
-        text: 'Detail',
-        value: 'detail'
+        text: 'Username',
+        value: 'username'
       },
       {
         width: 100,
@@ -130,9 +116,6 @@ export default {
   }),
 
   mounted() {
-    const user = JSON.parse(localStorage.getItem('user'))
-    this.shopId = user.username
-
     this.loadData()
   },
 
@@ -144,9 +127,15 @@ export default {
     async deleteProd(item) {
       if (confirm('Are you sure?')) {
         await firestore
-          .collection('products')
+          .collection('profiles')
           .doc(item.id)
           .delete()
+        ;(await firestore.collection('shop-orders').get()).forEach(item => {
+          firestore
+            .collection('shop-orders')
+            .doc(item.id)
+            .delete()
+        })
 
         await this.loadData()
       }
@@ -154,13 +143,21 @@ export default {
 
     async loadData() {
       this.loading = true
-      const data = await firestore
-        .collection('products')
-        .where('shopId', '==', this.shopId)
-        .get()
+      const data = await firestore.collection('profiles').get()
       this.loading = false
 
-      this.data = data.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+      this.data = data.docs.map(doc => {
+        const data = doc.data()
+
+        return {
+          id: doc.id,
+          name: data.name,
+          imageUrl: data.imageUrl,
+          platform: data.platform,
+          username: data.username
+        }
+      })
+      console.log(this.data)
     }
   }
 }

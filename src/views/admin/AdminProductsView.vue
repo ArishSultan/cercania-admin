@@ -4,14 +4,14 @@
       <h2>Products</h2>
       <v-spacer />
 
-      <v-btn
-        color="primary"
-        elevation="0"
-        @click="$router.push({ path: '/shop/products/new' })"
-        style="border-radius: 8px; margin-right: 10px"
-      >
-        Add New
-      </v-btn>
+      <!--      <v-btn-->
+      <!--        color="primary"-->
+      <!--        elevation="0"-->
+      <!--        @click="$router.push({ path: '/shop/products/new' })"-->
+      <!--        style="border-radius: 8px; margin-right: 10px"-->
+      <!--      >-->
+      <!--        Add New-->
+      <!--      </v-btn>-->
 
       <v-btn icon @click="loadData">
         <v-icon>mdi-reload</v-icon>
@@ -68,7 +68,7 @@
 import { firestore } from '@/firebase'
 
 export default {
-  name: 'ShopProductsView',
+  name: 'AdminProductsView',
   data: () => ({
     search: '',
     columns: [
@@ -80,7 +80,7 @@ export default {
         value: 'images'
       },
       {
-        width: 100,
+        width: 200,
         text: 'Name',
         value: 'name'
       },
@@ -109,11 +109,11 @@ export default {
         text: 'Discount (%)',
         value: 'discount'
       },
-      {
-        width: 200,
-        text: 'Detail',
-        value: 'detail'
-      },
+      // {
+      //   width: 200,
+      //   text: 'Detail',
+      //   value: 'detail'
+      // },
       {
         width: 100,
         text: 'Actions',
@@ -154,10 +154,7 @@ export default {
 
     async loadData() {
       this.loading = true
-      const data = await firestore
-        .collection('products')
-        .where('shopId', '==', this.shopId)
-        .get()
+      const data = await firestore.collection('products').get()
       this.loading = false
 
       this.data = data.docs.map(doc => ({ id: doc.id, ...doc.data() }))

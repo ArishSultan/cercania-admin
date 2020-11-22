@@ -1,6 +1,11 @@
 <template>
   <form-layout>
-    <form-firebase :title="isNew ? 'Create New Product' : 'Update Product'">
+    <form-firebase
+      :other-action="() => {}"
+      :title="isNew ? 'Create New Product' : 'Update Product'"
+      collection="products"
+      :data="() => ({ 'product-type': product.productType, ...product })"
+    >
       <v-text-field
         v-model="product.name"
         label="Product Name"
@@ -42,13 +47,22 @@
         class="span--2"
       />
 
-      <v-select outlined dense label="Category" />
       <v-select
+        v-model="product.category"
+        outlined
+        dense
+        label="Category"
+        :items="categories"
+      />
+
+      <v-select
+        v-model="product.productType"
         :disabled="!product.category"
         outlined
         hint="Select Category to enable"
         persistent-hint
         dense
+        :items="productTypes[product.category]"
         label="Product Type"
       />
 
@@ -63,18 +77,16 @@ import { Product } from '@/models/product'
 import FormFirebase from '@/components/base/FormComponent'
 import ImagesList from '@/components/ImagesList'
 
-// category,
-//     disabled,
-//     images,
-//     productType,
-
 export default {
   name: 'ShopProductFormView',
   components: { ImagesList, FormFirebase, FormLayout },
 
   data: () => ({
     isNew: true,
-    product: {}
+    product: {},
+
+    categories: Product.categories,
+    productTypes: Product.productType
   }),
 
   mounted() {

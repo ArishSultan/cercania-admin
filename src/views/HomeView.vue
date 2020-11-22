@@ -29,13 +29,41 @@
 const shopRoutes = [
   {
     path: '/shop/orders',
-    icon: 'mdi-plus',
+    icon: 'mdi-cash-register',
     text: 'Orders'
   },
   {
     path: '/shop/products',
-    icon: 'mdi-plus',
+    icon: 'mdi-segment',
     text: 'Products'
+  }
+]
+
+const adminRoutes = [
+  {
+    path: '/admin/ads',
+    icon: 'mdi-cash',
+    text: 'Ads'
+  },
+  {
+    path: '/admin/products',
+    icon: 'mdi-segment',
+    text: 'Products'
+  },
+  {
+    path: '/admin/shops',
+    icon: 'mdi-warehouse',
+    text: 'Shops'
+  },
+  {
+    path: '/admin/orders',
+    icon: 'mdi-cash-register',
+    text: 'Orders'
+  },
+  {
+    path: '/admin/users',
+    icon: 'mdi-account-group',
+    text: 'Users'
   }
 ]
 
@@ -56,9 +84,9 @@ export default {
 
   mounted() {
     if (this.isAdmin) {
-      this.routes = []
-    } else {
       this.routes = shopRoutes
+    } else {
+      this.routes = adminRoutes
     }
   }
 }

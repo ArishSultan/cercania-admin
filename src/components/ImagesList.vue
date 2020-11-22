@@ -1,17 +1,20 @@
 <template>
   <div class="images-list">
     <v-card class="images-list__picked-images">
-      <image-view
-        v-for="(image, i) of images_"
-        :key="i"
+      <extended-image-view
+        v-for="(image, i) of temp"
+        :key="image.id || image.name"
+        :index="i"
         :source="image"
-        :on-remove="removeImage"
         use-native-loading
+        @removed="remove(i)"
+        @uploaded="$emit('uploaded', $event)"
         viewable
         class="picked-image"
+        :folder="endpoint"
       />
 
-      <div v-if="images_.length === 0" class="images-list__empty">
+      <div v-if="temp.length === 0" class="images-list__empty">
         <p>No Images Attached</p>
       </div>
     </v-card>
@@ -47,47 +50,51 @@
         type="file"
         accept="image/*"
         style="display: none;"
-        @change="addImage"
+        @change="pickFile"
       />
     </div>
   </div>
 </template>
 
 <script>
-import ImageView from './ImageView'
-
+import ExtendedImageView from '@/components/ExtendedImageView'
 export default {
-  name: 'ImagesList',
-  components: { ImageView },
+  components: { ExtendedImageView },
 
   props: {
-    images: { type: Array, default: () => [] }
+    endpoint: {
+      type: String,
+      default: 'images'
+    },
+    images: {
+      type: Array,
+      default: () => []
+    }
   },
 
-  data: () => ({ images_: [] }),
+  data: () => ({
+    temp: []
+  }),
 
   mounted() {
-    if (this.images) this.images_ = this.images.map(image => image)
+    this.temp = [...this.images]
   },
 
   methods: {
-    removeImage($image) {
-      const index = this.images_.indexOf($image)
-
-      if (index > -1) this.images_.splice(index, 1)
-
-      this.$emit('changed', this.images_)
-      this.$emit('removed', $image)
+    pickFile(event) {
+      if (event.target.files.length > 0)
+        this.temp.push(
+          ...Object.values(event.target.files).map(file => ({ file }))
+        )
     },
 
-    addImage($event) {
-      if ($event.target.files.length > 0) {
-        for (let i = 0; i < $event.target.files.length; i++) {
-          this.images_.push($event.target.files[i])
-        }
-
-        this.$emit('changed', this.images_)
-      }
+    remove(index) {
+      this.temp.splice(index, 1)
+      const _temp = this.temp
+      this.temp = []
+      this.temp = _temp
+      this.$emit('changed', this.temp)
+      this.$emit('removed', index)
     }
   }
 }
@@ -152,3 +159,53 @@ export default {
   border-radius: 4px !important;
 }
 </style>
+
+<!--<script>-->
+<!--import ImageView from './ImageView'-->
+
+<!--export default {-->
+<!--  name: 'ImagesList',-->
+<!--  components: { ImageView },-->
+
+<!--  props: {-->
+<!--    folder: {-->
+<!--      type: String,-->
+<!--      default: 'images'-->
+<!--    },-->
+
+<!--    images: {-->
+<!--      type: Array,-->
+<!--      default: () => []-->
+<!--    }-->
+<!--  },-->
+
+<!--  data: () => ({-->
+<!--    temp: []-->
+<!--  }),-->
+
+<!--  mounted() {-->
+<!--    if (this.images) this._images = this.images.map(image => image)-->
+<!--  },-->
+
+<!--  methods: {-->
+<!--    removeImage($image) {-->
+<!--      const index = this._images.indexOf($image)-->
+
+<!--      if (index > -1) this._images.splice(index, 1)-->
+
+<!--      this.$emit('changed', this._images)-->
+<!--      this.$emit('removed', $image)-->
+<!--    },-->
+
+<!--    addImage($event) {-->
+<!--      if ($event.target.files.length > 0) {-->
+<!--        for (let i = 0; i < $event.target.files.length; i++) {-->
+<!--          this.temp.push($event.target.files[i])-->
+<!--        }-->
+
+<!--        this.$emit('changed', this._images)-->
+<!--      }-->
+<!--    }-->
+<!--  }-->
+<!--}-->
+<!--</script>-->

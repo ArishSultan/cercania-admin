@@ -32,4 +32,41 @@ export class Product {
     this.productType = productType || productType
     this.shopId = shopId || ''
   }
+
+  static categories = [
+    'Productos cosméticos',
+    'Accesorios',
+    'Artesanía y artes'
+  ]
+
+  static productType = {
+    'Productos cosméticos': [
+      'Todos',
+      'Maquillaje',
+      'Facial',
+      'Corporal-Capilar'
+    ],
+
+    Accesorios: [
+      'Todos',
+      'Anillos-Pulseras',
+      'Aretes',
+      'Billeteras y más',
+      'Bolsos',
+      'Kids',
+      'Collares',
+      'Relojes',
+      'Lentes',
+      'Mascotas',
+      'Sombreros-Vinchas'
+    ],
+
+    'Artesanía y artes': [
+      'Todos',
+      'Cerámica',
+      'Confecciones',
+      'Creaciones',
+      'Cuadros'
+    ]
+  }
 }
