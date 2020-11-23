@@ -10,6 +10,7 @@ import AdminOrdersView from '@/views/admin/AdminOrdersView'
 import AdminProductsView from '@/views/admin/AdminProductsView'
 import AdminUsersView from '@/views/admin/AdminUsersView'
 import AdminShopsView from '@/views/admin/AdminShopsView'
+import AdminShopForm from '@/views/admin/AdminShopForm'
 
 Vue.use(VueRouter)
 
@@ -72,6 +73,18 @@ const routes = [
   {
     path: '/shop/products/new',
     component: ShopProductFormView
+  },
+  {
+    path: '/shop/products/:id/edit',
+    component: ShopProductFormView
+  },
+  {
+    path: '/admin/shops/new',
+    component: AdminShopForm
+  },
+  {
+    path: '/admin/shops/:id/edit',
+    component: AdminShopForm
   }
 ]
 
@@ -84,15 +97,14 @@ const router = new VueRouter({
 router.beforeEach((to, _, next) => {
   const user = localStorage.getItem('user')
   if (user) {
-    next()
-    // const isAdmin = localStorage.getItem('isAdmin')
-    // if (isAdmin === 'true') {
-    //   if (to.path.includes('/admin')) next()
-    //   else next('/admin')
-    // } else {
-    //   if (to.path.includes('/shop')) next()
-    //   else next('/shop')
-    // }
+    const isAdmin = localStorage.getItem('isAdmin')
+    if (isAdmin === 'true') {
+      if (to.path.includes('/admin')) next()
+      else next('/admin')
+    } else {
+      if (to.path.includes('/shop')) next()
+      else next('/shop')
+    }
   } else if (to.path === '/sign-in') {
     next()
   } else {

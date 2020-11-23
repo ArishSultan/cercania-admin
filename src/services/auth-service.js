@@ -1,5 +1,4 @@
 import { firestore } from '@/firebase'
-import { Shop } from '@/models/shop'
 
 export class AuthService {
   /**
@@ -15,7 +14,12 @@ export class AuthService {
       .get()
 
     if (shops.docs.length > 0) {
-      const shop = new Shop({ id: shops.docs[0].id, ...shops.docs[0].data() })
+      console.log(shops)
+      const shop = { id: shops.docs[0].id, ...shops.docs[0].data() }
+
+      if (shop.disabled) {
+        return 'You are Blocked, Please Contact admin'
+      }
 
       localStorage.setItem('user', JSON.stringify(shop))
       localStorage.setItem('isAdmin', (shop.isAdmin || false).toString())

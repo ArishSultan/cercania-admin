@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { firestore } from '@/firebase'
+import { firestore, storage } from '@/firebase'
 
 export default {
   name: 'ShopProductsView',
@@ -138,7 +138,8 @@ export default {
 
   methods: {
     editProd(item) {
-      console.log(item)
+      localStorage.setItem('__product' + item.id, JSON.stringify(item))
+      this.$router.push({ path: `/shop/products/${item.id}/edit` })
     },
 
     async deleteProd(item) {
@@ -147,6 +148,10 @@ export default {
           .collection('products')
           .doc(item.id)
           .delete()
+
+        item.images.forEach(image =>
+          storage.ref('images/' + image.name).delete()
+        )
 
         await this.loadData()
       }

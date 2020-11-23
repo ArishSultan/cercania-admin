@@ -34,7 +34,7 @@
       :search="search"
     >
       <template v-slot:item.time="{ item }">
-        {{ format(new Date(item.time.toDate())) }}
+        {{ format(item.time) }}
       </template>
     </v-data-table>
   </v-card>
@@ -42,6 +42,7 @@
 
 <script>
 import { firestore } from '@/firebase'
+import { Timestamp } from '@firebase/firestore/dist/firestore/src/api/timestamp'
 
 export default {
   name: 'AdminOrdersView',
@@ -121,7 +122,16 @@ export default {
       this.data = data.docs.map(doc => ({ id: doc.id, ...doc.data() }))
     },
 
-    format(date) {
+    format(time) {
+      if (!time) return
+
+      let date
+      if (time.seconds) {
+        date = new Timestamp(time.seconds, time.nanoseconds).toDate()
+      } else {
+        date = time.toDate()
+      }
+
       return Intl.DateTimeFormat('en-US', {
         weekday: 'short',
         year: 'numeric',

@@ -2,7 +2,12 @@
   <div>
     <v-app-bar app dense color="primary" elevate-on-scroll>
       <v-app-bar-nav-icon @click="drawer = !drawer" color="white" />
-      <v-toolbar-title style="color: white">Shop</v-toolbar-title>
+      <v-toolbar-title style="color: white">
+        {{ isAdmin ? 'Admin' : 'Shop' }}
+      </v-toolbar-title>
+
+      <v-spacer />
+      <app-bar-profile />
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" app>
@@ -26,6 +31,7 @@
 </template>
 
 <script>
+import AppBarProfile from '@/components/AppBarProfile'
 const shopRoutes = [
   {
     path: '/shop/orders',
@@ -69,24 +75,21 @@ const adminRoutes = [
 
 export default {
   name: 'HomeView',
-
-  props: {
-    isAdmin: {
-      type: Boolean,
-      default: true
-    }
-  },
+  components: { AppBarProfile },
 
   data: () => ({
+    isAdmin: false,
     drawer: false,
     routes: []
   }),
 
   mounted() {
+    this.isAdmin = localStorage.getItem('isAdmin') === 'true'
+
     if (this.isAdmin) {
-      this.routes = shopRoutes
-    } else {
       this.routes = adminRoutes
+    } else {
+      this.routes = shopRoutes
     }
   }
 }

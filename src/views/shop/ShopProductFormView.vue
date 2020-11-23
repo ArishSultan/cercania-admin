@@ -1,6 +1,8 @@
 <template>
   <form-layout>
     <form-firebase
+      :updater="!isNew"
+      :after-action="clearItem"
       :other-action="() => {}"
       :title="isNew ? 'Create New Product' : 'Update Product'"
       collection="products"
@@ -66,7 +68,11 @@
         label="Product Type"
       />
 
-      <images-list class="span--2" />
+      <images-list
+        class="span--2"
+        @uploaded="product.images.push($event)"
+        @removed="product.images.splice($event, i)"
+      />
     </form-firebase>
   </form-layout>
 </template>
@@ -91,16 +97,20 @@ export default {
 
   mounted() {
     const shop = JSON.parse(localStorage.getItem('user'))
-    let product = localStorage.getItem('__product')
+    let product = localStorage.getItem('__product' + this.$route.params.id)
 
     if (product) {
-      /// Update Product
+      this.isNew = false
+      this.product = JSON.parse(product)
     } else {
-      /// Create New Product
       this.product = new Product({ shopId: shop.username })
+    }
+  },
+
+  methods: {
+    clearItem() {
+      localStorage.delete('__product' + this.$route.params.id)
     }
   }
 }
 </script>
-
-<style lang="sass" scoped></style>

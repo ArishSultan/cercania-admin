@@ -32,8 +32,8 @@ export default {
   name: 'SignInView',
 
   data: () => ({
-    username: 'carmenwendell53@gmail.com',
-    password: 'CarmenR-0987',
+    username: '',
+    password: '',
 
     snackbar: false,
     snackbarMessage: ''

@@ -35,7 +35,7 @@
         </v-btn>
       </div>
 
-      <div v-else class="image-view__actions">
+      <div v-else-if="src" class="image-view__actions">
         <v-btn icon outlined color="white" large @click="onRemove(index)">
           <v-icon>mdi-delete</v-icon>
         </v-btn>
@@ -72,7 +72,7 @@ export default {
     },
 
     source: {
-      type: [String, Object],
+      type: [Object],
       required: true
     },
 
@@ -92,6 +92,10 @@ export default {
   }),
 
   mounted() {
+    if (!this.source) {
+      return
+    }
+
     if (this.source.file) {
       this.uploaded = false
     }
