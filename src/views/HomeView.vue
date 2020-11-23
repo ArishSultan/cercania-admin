@@ -70,6 +70,11 @@ const adminRoutes = [
     path: '/admin/users',
     icon: 'mdi-account-group',
     text: 'Users'
+  },
+  {
+    path: '/admin/notifications',
+    icon: 'mdi-bell',
+    text: 'Notifications'
   }
 ]
 

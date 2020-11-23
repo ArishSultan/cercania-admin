@@ -11,6 +11,7 @@ import AdminProductsView from '@/views/admin/AdminProductsView'
 import AdminUsersView from '@/views/admin/AdminUsersView'
 import AdminShopsView from '@/views/admin/AdminShopsView'
 import AdminShopForm from '@/views/admin/AdminShopForm'
+import AdminNotificationsView from '@/views/admin/AdminNotificationsView'
 
 Vue.use(VueRouter)
 
@@ -44,6 +45,10 @@ const routes = [
       {
         path: '/admin/shops',
         component: AdminShopsView
+      },
+      {
+        path: '/admin/notifications',
+        component: AdminNotificationsView
       }
     ]
   },
@@ -63,10 +68,6 @@ const routes = [
       {
         path: '/shop/products',
         component: ShopProductsView
-      },
-      {
-        path: '/shop/products/edit'
-        // component: ''
       }
     ]
   },
@@ -84,6 +85,10 @@ const routes = [
   },
   {
     path: '/admin/shops/:id/edit',
+    component: AdminShopForm
+  },
+  {
+    path: '/admin/notifications/new',
     component: AdminShopForm
   }
 ]

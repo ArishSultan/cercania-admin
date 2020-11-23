@@ -97,7 +97,7 @@ export default {
           let res = null
           const data = await this.data()
 
-          await this.otherAction()
+          if (this.otherAction != null) await this.otherAction()
           const { id, ...insertAbleData } = data
 
           try {
@@ -119,6 +119,7 @@ export default {
               res = await db.collection(this.collection).add(insertAbleData)
             }
 
+            if (this.afterAction) await this.afterAction()
             /// Since there is nothing to do with the
             /// response currently So, just logging the
             /// response to window console.

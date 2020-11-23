@@ -60,7 +60,7 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <v-icon small color="green" @click="editProd(item)">mdi-pencil</v-icon>
+        <!--        <v-icon small color="green" @click="editProd(item)">mdi-pencil</v-icon>-->
         <v-icon small color="error" @click="deleteProd(item)"
           >mdi-delete</v-icon
         >
@@ -157,7 +157,6 @@ export default {
           username: data.username
         }
       })
-      console.log(this.data)
     }
   }
 }

@@ -41,8 +41,8 @@
 </template>
 
 <script>
+import firebase from 'firebase'
 import { firestore } from '@/firebase'
-import { Timestamp } from '@firebase/firestore/dist/firestore/src/api/timestamp'
 
 export default {
   name: 'AdminOrdersView',
@@ -127,7 +127,10 @@ export default {
 
       let date
       if (time.seconds) {
-        date = new Timestamp(time.seconds, time.nanoseconds).toDate()
+        date = new firebase.firestore.Timestamp(
+          time.seconds,
+          time.nanoseconds
+        ).toDate()
       } else {
         date = time.toDate()
       }
