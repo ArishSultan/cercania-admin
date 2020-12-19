@@ -32,12 +32,34 @@
       :loading="loading"
       :items="data"
       :search="search"
-    />
+    >
+      <template v-slot:item.status="{ item }">
+        <v-edit-dialog
+          :return-value.sync="item.status"
+          @save="updateData(item)"
+          @close="updateData(item)"
+        >
+          {{ item.status }}
+          <template v-slot:input>
+            <v-text-field
+              v-model="item.status"
+              label="Edit"
+              single-line
+              counter
+            />
+          </template>
+        </v-edit-dialog>
+      </template>
+      <template v-slot:item.time="{ item }">
+        {{ format(item.time) }}
+      </template>
+    </v-data-table>
   </v-card>
 </template>
 
 <script>
 import { firestore } from '@/firebase'
+import firebase from 'firebase'
 
 export default {
   name: 'ShopOrdersView',
@@ -105,6 +127,7 @@ export default {
     const user = JSON.parse(localStorage.getItem('user'))
     this.shopId = user.username
 
+    console.log(user)
     this.loadData()
   },
 
@@ -112,12 +135,40 @@ export default {
     async loadData() {
       this.loading = true
       const data = await firestore
-        .collection('orders')
+        .collection('shop-orders')
         .where('shopId', '==', this.shopId)
         .get()
       this.loading = false
 
       this.data = data.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    },
+
+    updateData(item) {
+      firestore
+        .collection('shop-orders')
+        .doc(item.id)
+        .set(item)
+    },
+
+    format(time) {
+      if (!time) return
+
+      let date
+      if (time.seconds) {
+        date = new firebase.firestore.Timestamp(
+          time.seconds,
+          time.nanoseconds
+        ).toDate()
+      } else {
+        date = time.toDate()
+      }
+
+      return Intl.DateTimeFormat('en-US', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      }).format(date)
     }
   }
 }

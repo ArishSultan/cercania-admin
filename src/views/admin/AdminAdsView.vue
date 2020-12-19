@@ -12,7 +12,7 @@
         Accessories Ads
         <images-list
           :images="ads1"
-          @removed="removed('accessories-ads', ads1[$event], $event)"
+          @removed="removed('accessories-ads', $event)"
           @uploaded="newAd('accessories-ads', $event)"
         />
       </div>
@@ -21,7 +21,7 @@
         Artesanía y artes Ads
         <images-list
           :images="ads2"
-          @removed="removed('artesanía-y-artes-ads', ads2[$event], $event)"
+          @removed="removed('artesanía-y-artes-ads', $event)"
           @uploaded="newAd('artesanía-y-artes-ads', $event)"
         />
       </div>
@@ -30,7 +30,7 @@
         Productos Cosmeticos Ads
         <images-list
           :images="ads3"
-          @removed="removed('productos-cosmeticos-ads', ads3[$event], $event)"
+          @removed="removed('productos-cosmeticos-ads', $event)"
           @uploaded="newAd('productos-cosmeticos-ads', $event)"
         />
       </div>
@@ -74,13 +74,12 @@ export default {
     removed(collection, data) {
       firestore
         .collection(collection)
-        .doc(data.id)
+        .doc(data.data.id)
         .delete()
-
-      // this.ads1.splice(index, 1)
     },
-    newAd(collection, data) {
-      firestore.collection(collection).add(data)
+    async newAd(collection, data) {
+      const obj = await firestore.collection(collection).add(data.data)
+      data.source[data.index] = { id: obj.id, ...data }
     }
   }
 }

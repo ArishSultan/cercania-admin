@@ -70,8 +70,9 @@
 
       <images-list
         class="span--2"
-        @uploaded="product.images.push($event)"
-        @removed="product.images.splice($event, i)"
+        :images="product.images"
+        @uploaded="addImage"
+        @removed="product.images.splice($event.index, 1)"
       />
     </form-firebase>
   </form-layout>
@@ -95,13 +96,16 @@ export default {
     productTypes: Product.productType
   }),
 
-  mounted() {
+  beforeMount() {
+    console.log('Form mounted')
+
     const shop = JSON.parse(localStorage.getItem('user'))
     let product = localStorage.getItem('__product' + this.$route.params.id)
 
     if (product) {
       this.isNew = false
       this.product = JSON.parse(product)
+      console.log(this.product)
     } else {
       this.product = new Product({ shopId: shop.username })
     }
@@ -109,7 +113,12 @@ export default {
 
   methods: {
     clearItem() {
-      localStorage.delete('__product' + this.$route.params.id)
+      localStorage.removeItem('__product' + this.$route.params.id)
+    },
+
+    addImage(data) {
+      data.source[data.index] = data.data
+      this.product.images = data.source
     }
   }
 }

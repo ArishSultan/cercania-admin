@@ -86,6 +86,7 @@ export default {
     src: '',
     ref: null,
     name: '',
+    uploadedData: undefined,
     uploaded: true,
     uploading: false,
     uploadProgress: 0
@@ -120,7 +121,7 @@ export default {
     upload(source) {
       this.uploading = true
       this.uploadProgress = 0
-      const name = 'test'
+      const name = Date.now().toString()
       this.ref = storage.ref(this.folder + '/' + name).put(source)
 
       this.ref.on(
@@ -135,7 +136,8 @@ export default {
           this.uploaded = true
           this.uploading = false
           const url = await this.ref.snapshot.ref.getDownloadURL()
-          this.$emit('uploaded', { name, url })
+          this.uploadedData = { name, url }
+          this.$emit('uploaded', this.uploadedData)
         }
       )
     },
@@ -143,7 +145,7 @@ export default {
     view() {},
     onRemove() {
       storage.ref(this.folder + '/' + this.name).delete()
-      this.$emit('removed')
+      this.$emit('removed', this.uploadedData)
     }
   }
 }

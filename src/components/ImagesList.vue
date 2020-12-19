@@ -3,12 +3,12 @@
     <v-card class="images-list__picked-images">
       <extended-image-view
         v-for="(image, i) of temp"
-        :key="image.id || image.name"
+        :key="resolveKey(image)"
         :index="i"
         :source="image"
         use-native-loading
         @removed="remove(i)"
-        @uploaded="$emit('uploaded', $event)"
+        @uploaded="$emit('uploaded', { source: temp, index: i, data: $event })"
         viewable
         class="picked-image"
         :folder="endpoint"
@@ -77,6 +77,9 @@ export default {
   }),
 
   mounted() {
+    console.log('List mounted')
+
+    console.log(this.images)
     this.temp = [...this.images]
   },
 
@@ -89,12 +92,19 @@ export default {
     },
 
     remove(index) {
-      this.temp.splice(index, 1)
-      const _temp = this.temp
-      this.temp = []
+      const _temp = [...this.temp]
+      this.$emit('removed', { data: _temp[index], index })
+      _temp.splice(index, 1)
       this.temp = _temp
       this.$emit('changed', this.temp)
-      this.$emit('removed', index)
+    },
+
+    resolveKey(image) {
+      if (image) {
+        return image.id || image.name
+      } else {
+        return Date.now().toString()
+      }
     }
   }
 }
